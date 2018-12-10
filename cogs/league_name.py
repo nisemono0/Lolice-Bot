@@ -70,8 +70,8 @@ class LeagueNames():
             logging.info((str(context.message.author) + ' == ' + league_name).encode("utf-8"))
         except Exception as e:
             # if bot has error, log it
-            print('[ERROR]:' + '[' + str(context.message.channel) + ']: ' + str(e) + ' for $verify')
-            logging.error(('[' + str(context.message.channel) + ']: ' + str(e) + ' for $verify').encode("utf-8"))
+            print('[ERROR]:' + '[' + str(context.message.channel) + ']: ' + str(e) + ' for verify')
+            logging.error(('[' + str(context.message.channel) + ']: ' + str(e) + ' for verify').encode("utf-8"))
             db.close()
     # if the user has verified role do nothing
     @verify.error
@@ -144,6 +144,28 @@ class LeagueNames():
                 await self.bot.say('User not found')
                 db.close()
                 return
-    
+
+    @commands.command(pass_context=True)
+    async def whois(self, context, *, league_name):
+        """$whois [user]: Get your own or someone's league name"""
+        if league_name is None:
+                await self.bot.say('User not found')
+                return
+        else:
+            # Get a user's discord name
+            db = TinyDB(variables.db_location, default_table=variables.table_name)
+            if db.contains(self.Users.league_name == league_name):
+                db_ret = db.get(self.Users.league_name == league_name)
+                discord_name = db_ret.get('discord_name')
+                discord_id = db_ret.get('discord_id')
+                fmt = 'Discord name is: {0} (id: {1})'
+                await self.bot.say(fmt.format(discord_name, discord_id))
+                db.close()
+                return
+            else:
+                await self.bot.say('User not found')
+                db.close()
+                return
+
 def setup(bot):
     bot.add_cog(LeagueNames(bot))
