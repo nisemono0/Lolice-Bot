@@ -147,7 +147,7 @@ class LeagueNames():
 
     @commands.command(pass_context=True)
     async def whois(self, context, *, league_name):
-        """$whois [user]: Get your own or someone's league name"""
+        """$whois [league_name]: Get someone's discord name"""
         if league_name is None:
                 await self.bot.say('User not found')
                 return
