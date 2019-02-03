@@ -1,4 +1,5 @@
 import logging
+import re
 
 import discord
 from discord.ext import commands
@@ -119,53 +120,50 @@ class LeagueNames():
         if user is None:
             db = TinyDB(variables.db_location, default_table=variables.table_name)
             # Get your own lolname if you're in the db
-            if db.contains(self.Users.discord_id == context.message.author.id):
-                db_ret = db.get(self.Users.discord_id == context.message.author.id)
-                league_name = db_ret.get('league_name')
-                fmt = 'Your league name is: {0}'
-                await self.bot.say(fmt.format(league_name))
+            db_ret = db.search(self.Users.discord_id.search(context.message.author.id, flags=re.IGNORECASE))
+            if not db_ret:
+                await self.bot.say('User not found')
                 db.close()
                 return
             else:
-                await self.bot.say('User not found')
+                league_name = db_ret[0].get('league_name')
+                fmt = 'Your league name is: {0}'
+                await self.bot.say(fmt.format(league_name))
                 db.close()
                 return
         else:
             # Get another user's lolname
             db = TinyDB(variables.db_location, default_table=variables.table_name)
-            if db.contains(self.Users.discord_id == user.id):
-                db_ret = db.get(self.Users.discord_id == user.id)
-                league_name = db_ret.get('league_name')
-                fmt = '{0} league name is: {1}'
-                await self.bot.say(fmt.format(user, league_name))
+            db_ret = db.search(self.Users.discord_id.search(user.id, flags=re.IGNORECASE))
+            if not db_ret:
+                await self.bot.say('User not found')
                 db.close()
                 return
             else:
-                await self.bot.say('User not found')
+                league_name = db_ret[0].get('league_name')
+                fmt = '{0} league name is: {1}'
+                await self.bot.say(fmt.format(user, league_name))
                 db.close()
                 return
 
     @commands.command(pass_context=True)
     async def whois(self, context, *, league_name):
-        """$whois [league_name]: Get someone's discord name"""
-        if league_name is None:
-                await self.bot.say('User not found')
-                return
+        """$whois [league name]: Get your own or someone's league name"""
+        db = TinyDB(variables.db_location, default_table=variables.table_name)
+        db_ret = db.search(self.Users.league_name.search(league_name, flags=re.IGNORECASE))
+        if not db_ret:
+            await self.bot.say("User not found")
+            db.close()
+            return
         else:
-            # Get a user's discord name
-            db = TinyDB(variables.db_location, default_table=variables.table_name)
-            if db.contains(self.Users.league_name == league_name):
-                db_ret = db.get(self.Users.league_name == league_name)
-                discord_name = db_ret.get('discord_name')
-                discord_id = db_ret.get('discord_id')
+            for ret in db_ret:
+                discord_id = ret.get('discord_id')
+                discord_name = ret.get('discord_name')
                 fmt = 'Discord name is: {0} (id: {1})'
                 await self.bot.say(fmt.format(discord_name, discord_id))
-                db.close()
-                return
-            else:
-                await self.bot.say('User not found')
-                db.close()
-                return
+            db.close()
+            return
+
 
 def setup(bot):
     bot.add_cog(LeagueNames(bot))
