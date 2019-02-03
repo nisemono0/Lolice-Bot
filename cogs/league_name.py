@@ -128,7 +128,7 @@ class LeagueNames():
             else:
                 embed=discord.Embed(title="", description="", color=0x763030)
                 league_name = db_ret[0].get('league_name')
-                embed.add_field(name="Discord name: {0}".format(context.message.author), value="League name: {0}".format(league_name), inline=False)
+                embed.add_field(name="Discord name: {0} (Id: {1})".format(context.message.author, context.message.author.id), value="League name: {0}".format(league_name), inline=False)
                 await self.bot.say(embed=embed)
                 db.close()
                 return
@@ -143,7 +143,7 @@ class LeagueNames():
             else:
                 embed=discord.Embed(title="", description="", color=0x763030)
                 league_name = db_ret[0].get('league_name')
-                embed.add_field(name="Discord name: {0}".format(user), value="League name: {0}".format(league_name), inline=False)
+                embed.add_field(name="Discord name: {0} (Id: {1})".format(user, user.id), value="League name: {0}".format(league_name), inline=False)
                 await self.bot.say(embed=embed)
                 db.close()
                 return
@@ -167,7 +167,7 @@ class LeagueNames():
                 if member is None:
                     embed.add_field(name="Discord name: {0} (Id: {1})".format(discord_name, discord_id), value="League name: {0}".format(league_name), inline=False)
                 else:
-                    embed.add_field(name="Discord name: {0} (Id: {1}".format(member, discord_id), value="League name: {0}".format(league_name), inline=False)
+                    embed.add_field(name="Discord name: {0} (Id: {1})".format(member, discord_id), value="League name: {0}".format(league_name), inline=False)
             await self.bot.say(embed=embed)
             db.close()
             return
