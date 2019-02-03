@@ -162,14 +162,16 @@ class LeagueNames():
             for ret in db_ret:
                 discord_id = ret.get('discord_id')
                 discord_name = ret.get('discord_name')
+                league_name = ret.get('league_name')
                 member = discord.utils.get(context.message.author.server.members, id=discord_id)
                 if member is None:
-                    embed.add_field(name="Discord name: {0}".format(discord_name), value="Id: {0}".format(discord_id), inline=False)
+                    embed.add_field(name="Discord name: {0} (Id: {1})".format(discord_name, discord_id), value="League name: {0}".format(league_name), inline=False)
                 else:
-                    embed.add_field(name="Discord name: {0}".format(member), value="Id: {0}".format(discord_id), inline=False)
+                    embed.add_field(name="Discord name: {0} (Id: {1}".format(member, discord_id), value="League name: {0}".format(league_name), inline=False)
             await self.bot.say(embed=embed)
             db.close()
             return
+
 
 
 
