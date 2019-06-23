@@ -27,7 +27,6 @@ club_invite_channel = '' # change to invite notif channel
 verified = '' # change to verified role
 not_verified = '' # change to not verified role
 mod_role = '' # change to mod role
-muted_role = '' # change to muted role
 nsfw_role = '' # change to nsfw
 
 # Rules, Instructions
@@ -38,3 +37,5 @@ rules = """ ```css
 instructions = """ ``` Change here ```"""
 
 welcome_message = """ ``` Change here ``` """
+
+update_name = """ ``` Change here ``` """
