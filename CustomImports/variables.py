@@ -22,6 +22,7 @@ table_name = 'users'
 # channels
 verify_channel_id = '' # change to verify channel
 club_invite_channel = '' # change to invite notif channel
+general_channel_id = '' # change to general channel id
 
 # Role Names
 verified = '' # change to verified role
