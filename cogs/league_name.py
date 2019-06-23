@@ -60,18 +60,18 @@ class LeagueNames():
             fmt = '{0.mention} needs a club invite, {1.mention}'
             await self.bot.send_message(mod_notif_channel, fmt.format(context.message.author, mod_role))
             # pm the user the welcome message
-            await self.bot.send_message(context.message.author, variables.welcome_message)
+            try:
+                await self.bot.send_message(context.message.author, variables.welcome_message)
+            except:
+                pass
             # add user into db
             db.insert({'discord_id': context.message.author.id, 'discord_name': str(context.message.author), 'league_name': league_name})
             db.close()
-            # cli/file logging
-            print('[INFO]:' + str(context.message.author) + ' is verified')
-            print('[INFO]:' + str(context.message.author) + ' == ' + league_name)
+            # Log
             logging.info((str(context.message.author) + ' is verified').encode("utf-8"))
             logging.info((str(context.message.author) + ' == ' + league_name).encode("utf-8"))
         except Exception as e:
             # if bot has error, log it
-            print('[ERROR]:' + '[' + str(context.message.channel) + ']: ' + str(e) + ' for verify')
             logging.error(('[' + str(context.message.channel) + ']: ' + str(e) + ' for verify').encode("utf-8"))
             db.close()
     # if the user has verified role do nothing
@@ -102,8 +102,7 @@ class LeagueNames():
             channel = discord.utils.get(context.message.author.server.channels, id = variables.verify_channel_id)
             fmt = '{0.mention} : {1} -> {2}'                
             await self.bot.send_message(channel, fmt.format(context.message.author, old_name, league_name))
-            # CLI, file logging
-            print('[INFO]:' + str(context.message.author) + ' updated league name: ' + old_name + ' -> ' + league_name)
+            # Log
             logging.info((str(context.message.author) + ' updated league name: ' + old_name + ' -> ' + league_name).encode("utf-8"))
             return
         else: 
